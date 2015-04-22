@@ -1,0 +1,6 @@
+name             'nat-instance'
+maintainer       'Tom Alessi'
+maintainer_email 'tom.alessi@gmail.com'
+license          'Apache 2.0'
+description      'Installs/Configures Nat instances in a multi-zone Amazon AWS environment'
+version          '0.1.0'
