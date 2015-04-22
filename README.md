@@ -36,7 +36,8 @@ The purpose of this cookbook is to build and maintain two NAT instances in an Am
         "my_route": "rtb-xxxxxxxx"
       },
       "ec2_url": "https://ec2.us-west-2.amazonaws.com"
-    },
+    }
+}
 ```
 - nat-instance-2a and nat-instance-2b are the hostnames of the two NAT instances (in this case, one in availability zone 2a and one in availability zone 2b) but you may substitute any names here as long as they match your NAT instance names.
 - Populate the partner_id, partner_route and my_route for each NAT instance in the stack custom JSON.
@@ -59,6 +60,7 @@ The purpose of this cookbook is to build and maintain two NAT instances in an Am
     }
   ]
 }
+```
 - Include this recipe as part of the `setup` or `configure` lifecycle event in the NAT instance layer.
 - Provision two NAT instances from the OpsWorks console using the AMI you created earlier within the NAT instance stack/layer, one in each AZ in the Internet accessible subnet.
 ```
