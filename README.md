@@ -6,8 +6,9 @@ The purpose of this cookbook is to build and maintain two NAT instances in an Am
 ## Assumptions
 
 - This cookbook is meant to work within an AWS OpsWorks environment.  Your mileage may vary in other environments.
-- You have a VPC with two availability zones within a single AWS region, each with its own NAT instance.
-- Within each AZ, you have an Internet connected subnet, and a non Internet connected (or private) subnet.
+- You have a VPC with two availability zones within a single AWS region (each will have its own NAT instance).
+- Within each AZ, you have an Internet connected subnet, and one or more non Internet connected (or private) subnets.  Any instances in the Internet connected subnet will require a public IP address and any instances in the private subnets will use the NAT instances for Internet connectivity.
+- You have setup three route tables: (1) Main route table, (2) a route table for AZ1 and (3) a route table for AZ2.  The main route table should send 0.0.0.0/0 to the IGW with the other two route tables sending 0.0.0.0/0 to their respective NAT instances.
 
 
 ## Requirements
@@ -19,8 +20,10 @@ The purpose of this cookbook is to build and maintain two NAT instances in an Am
 
 ## Usage
 
+NOTE: You will not be able to create functional route tables, nor populate the stack custom JSON until the two NAT instances are actually provisioned (because you need their instance IDs).  Once the NAT instances are provisioned, you will use this recipe to keep them properly running and configured.
+
 - Create a NAT instance AMI using an Amazon Linux AMI from the Amazon marketplace (these instances always include the string amzn-ami-vpc-nat).
-- Setup the following custom JSON in the OpsWorks stack that controls your NAT instances:
+- Setup the following custom JSON in the OpsWorks stack that controls your NAT instances.  The names `nat-instance-2a` and `nat-instance-2b` are the hostnames of the two NAT instances (in this case, one in availability zone 2a and one in availability zone 2b) but you may substitute any names here as long as they match your NAT instance hostnames.  The `ec2-url` must match the region within which you are provisioning the nat instances:
 ```json
 {
   "private_settings": {
@@ -39,8 +42,6 @@ The purpose of this cookbook is to build and maintain two NAT instances in an Am
     }
 }
 ```
-- nat-instance-2a and nat-instance-2b are the hostnames of the two NAT instances (in this case, one in availability zone 2a and one in availability zone 2b) but you may substitute any names here as long as they match your NAT instance names.
-- Populate the partner_id, partner_route and my_route for each NAT instance in the stack custom JSON.
 - Create a layer within the OpsWorks stack that will be responsible for your NAT instances.  Configure the layer to provide an elastic IP to each provisioned instance.
 - Include the following policy in the OpsWorks stack instance profile associated with the NAT instance stack/layer so that NAT instances can manage routes:
 ```json
@@ -61,14 +62,17 @@ The purpose of this cookbook is to build and maintain two NAT instances in an Am
   ]
 }
 ```
-- Include this recipe as part of the `setup` or `configure` lifecycle event in the NAT instance layer.
+- Include this recipe as part of the `setup` lifecycle event in the NAT instance layer.
 - Provision two NAT instances from the OpsWorks console using the AMI you created earlier within the NAT instance stack/layer, one in each AZ in the Internet accessible subnet.
 - After the instances are provisioned, disable source/destination checks.
+- Populate the partner_id, partner_route and my_route for each NAT instance in the stack custom JSON and run the `setup` lifecycle event on the instances.
 ```
+
 
 ## To Do
 
 - Disable source/destionation checks on NAT instances using the AWS SDK as part of the recipe.
+
 
 ## License and Authors
 
