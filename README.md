@@ -62,7 +62,10 @@ NOTE: You will not be able to create functional route tables, nor populate the s
   ]
 }
 ```
-- Include this recipe as part of the `setup` lifecycle event in the NAT instance layer.
+- Include this recipe as part of the `setup` lifecycle event in the NAT instance layer.  You will need to reference this recipe in your Berksfile:
+```text
+cookbook 'nat-instance', git: 'git://github.com/tomalessi/nat-instance.git'
+```
 - Provision two NAT instances from the OpsWorks console using the AMI you created earlier within the NAT instance stack/layer, one in each AZ in the Internet accessible subnet.
 - After the instances are provisioned, disable source/destination checks.
 - Populate the partner_id, partner_route and my_route for each NAT instance in the stack custom JSON and run the `setup` lifecycle event on the instances.
