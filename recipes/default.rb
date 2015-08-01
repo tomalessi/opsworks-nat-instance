@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: nat-instance
+# Cookbook Name:: opsworks-nat-instance
 # Recipe:: default
 #
 # Copyright 2015, Tom Alessi

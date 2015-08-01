@@ -1,4 +1,4 @@
-name             'nat-instance'
+name             'opsworks-nat-instance'
 maintainer       'Tom Alessi'
 maintainer_email 'tom.alessi@gmail.com'
 license          'Apache 2.0'
